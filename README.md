@@ -169,6 +169,7 @@ The [examples](examples/) folder contains complete system designs that demonstra
 | [x-to-book-system](examples/x-to-book-system/) | Multi-agent system that monitors X accounts and generates daily synthesized books | multi-agent-patterns, memory-systems, context-optimization, tool-design, evaluation |
 | [llm-as-judge-skills](examples/llm-as-judge-skills/) | Production-ready LLM evaluation tools with TypeScript implementation, 19 passing tests | advanced-evaluation, tool-design, context-fundamentals, evaluation |
 | [book-sft-pipeline](examples/book-sft-pipeline/) | Train models to write in any author's style. Includes Gertrude Stein case study with 70% human score on Pangram, $2 total cost | project-development, context-compression, multi-agent-patterns, evaluation |
+| [interleaved-thinking](examples/interleaved-thinking/) | Reasoning trace optimizer for debugging agents through interleaved thinking, pattern detection, and prompt improvement loops | context-degradation, context-optimization, evaluation, project-development |
 
 Each example includes:
 - Complete PRD with architecture decisions
