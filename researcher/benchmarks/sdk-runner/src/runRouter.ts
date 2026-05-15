@@ -188,8 +188,7 @@ async function main(): Promise<number> {
   }
 
   const summary = summarize(results, prompts);
-  writeJson(join(runDir, "summary.json"), summary);
-  appendHistoryEntry(HISTORY_PATH, {
+  const metadata = {
     timestamp: utcNow(),
     repo_sha: repoCommitSha(),
     fixture_sha: fixtureSha(config.fixturePath),
@@ -197,8 +196,9 @@ async function main(): Promise<number> {
     models: config.models,
     reps: config.reps,
     prompts: prompts.length,
-    summary,
-  });
+  };
+  writeJson(join(runDir, "summary.json"), { ...metadata, summary });
+  appendHistoryEntry(HISTORY_PATH, { ...metadata, summary });
 
   console.log("summary:", summary);
   console.log(`raw results in ${runDir}`);

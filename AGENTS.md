@@ -9,6 +9,7 @@ Workspace memory for agents collaborating on this repository. Keep entries durab
 - Never push to GitHub or merge a PR without explicit user approval. Preparing branches, commits, and PRs is permitted only when the user has approved that specific action.
 - Tone is technical CTO: direct, no marketing language, no exclamation marks, no emojis, no em dashes. State trade-offs and complexity upfront.
 - When the scope spans multiple architectural decisions or irreversible changes, propose a plan first instead of executing.
+- For benchmarks and evaluation work, hold to research-paper-grade methodology (statistical discipline, bias mitigation, ablations, reproducibility) over speed. Don't rush.
 
 ## Learned Workspace Facts
 
@@ -21,8 +22,10 @@ Workspace memory for agents collaborating on this repository. Keep entries durab
 - The corpus index (`researcher/corpus/index.json`) is the machine-readable map of skills, activation scenarios, mechanisms, and claims. Update it when adding or restructuring skills.
 - The continuous loop (`researcher/scripts/loop_*.py`) runs from launchd via `researcher/orchestration/launchd/`. It never invokes paid LLMs; HTTP retrieval is stdlib-only with a 1.5 MB cap and a 30-second timeout.
 - Runtime state is not committed: `researcher/queue/*.jsonl`, `researcher/queue/.locks/`, `researcher/reports/{logs,snapshots,loop-events.jsonl,loop-failures.jsonl,status.md,parked-review.md}`, and `researcher/runs/*/` are gitignored. The seed run `20260515-035228-executable-autonomous-research-frameworks` is the only committed run; it is closed as `reference-only` and serves as a worked example.
-- The current published version is 2.2.0 across `.claude-plugin/marketplace.json`, `.plugin/plugin.json`, and root `SKILL.md`. There are 14 skills.
-- Detailed lessons from building the researcher OS are recorded in `researcher/insights/auto-research-experiment.md`; read it before extending the harness.
+- The current published version is 2.2.0 across `.claude-plugin/marketplace.json`, `.plugin/plugin.json`, and root `SKILL.md`. There are 15 skills (latent-briefing covers KV cache sharing between agents).
+- Detailed lessons from building the researcher OS live in `researcher/insights/auto-research-experiment.md` (engineering rationale) and `researcher/insights/how-we-built-this.md` (project narrative and sharing templates); read both before extending the harness or writing release-facing prose.
+- Benchmarks are staged in `researcher/benchmarks/`: Stage 0 deterministic harness (shipped), Stage 1 per-skill health via `researcher/scripts/skill_health.py` writing to `researcher/reports/skill-health.json` (gitignored), Stage 2 router (`researcher/benchmarks/router/`), Stage 3 effectiveness (`researcher/benchmarks/effectiveness/tasks/`), Stage 4 composition (future). `researcher/benchmarks/PLAN.md` is the methodology source of truth.
+- Benchmark execution uses the Cursor SDK runner at `researcher/benchmarks/sdk-runner/` (TypeScript, `@cursor/sdk`). Result artifacts under `researcher/benchmarks/{router,effectiveness}/results/` and history JSONLs (`router-history.jsonl`, `effectiveness-history.jsonl`) are gitignored.
 
 ## Repository Operating Defaults
 
@@ -31,3 +34,4 @@ Workspace memory for agents collaborating on this repository. Keep entries durab
 - Append-only ledgers for accepted and rejected mechanisms so future agents do not rediscover failed paths.
 - Atomic writes (`tempfile` + `os.replace`) and `fcntl` locks for any shared file the loop touches.
 - Live execution is the highest-signal validation for orchestration code; smoke-test changes against the actual loop before declaring them safe.
+- Cursor SDK is the only paid-API surface allowed for benchmarks. Privacy Mode required, `apiKey` passed explicitly per call, never `settingSources: "all"` in benchmarks (use `[]` for control, `["project"]` with a curated `.cursor/skills/` for ablation). Cost gates (`--max-runs`, `--max-budget-usd`, or `--dry-run`) must be set before any SDK call.
