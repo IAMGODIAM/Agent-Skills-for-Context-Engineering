@@ -117,4 +117,4 @@ External resources on context engineering:
 **Created**: 2025-12-20
 **Last Updated**: 2026-05-15
 **Author**: Agent Skills for Context Engineering Contributors
-**Version**: 2.2.0
+**Version**: 2.3.0

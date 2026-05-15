@@ -9,10 +9,19 @@ This document is the plan to close that gap, in four staged releases, with resea
 | Stage | Release | What it measures | Cost | Status |
 | --- | --- | --- | --- | --- |
 | 0 | v2.2.0 (shipped) | Harness resistance to gaming, structural validity | $0 | done |
-| 1 | v2.2.1 | Per-skill health metrics (deterministic) | $0 | scaffolded in this plan |
-| 2 | v2.3.0 | Skill router accuracy (LLM-as-router) | Cursor credits | scaffolded, awaiting key |
-| 3 | v2.4.0 | Skill effectiveness on real agent tasks | Cursor credits, larger | designed, one task built |
+| 1 | v2.3.0 (shipped) | Per-skill health metrics (deterministic) | $0 | done; corpus 0.814 aggregate, 2 of 15 flagged |
+| 2 | v2.3.0 (shipped) | Skill router accuracy (LLM-as-router) | Cursor credits (~$7 per full sweep) | done; baseline + post-fix delta published |
+| 3 | v2.4.0 | Skill effectiveness on real agent tasks | Cursor credits, larger | scaffolded, one task built |
 | 4 | v2.5.0 | Cross-skill composition | Cursor credits | future |
+
+### Shipped Stage 2 results (v2.3.0)
+
+Two full 600-run sweeps across `composer-2`, `claude-opus-4-7`, `gpt-5.5`, `gemini-3.1-pro` at seed=1, 3 replications per (prompt, model):
+
+- Baseline: `researcher/benchmarks/router/results-published/2026-05-15.md` (566 of 600; v1 runner died mid-sweep).
+- Post-fix (description rewrites + hardened runner): `researcher/benchmarks/router/results-published/2026-05-15-v2.md` (600 of 600, includes delta-vs-baseline section).
+
+Headline finding: targeted description rewrites moved `context-fundamentals` top-1 from 0.255 to 0.489 (+23.4pp) and `project-development` from 0.750 to 1.000 (+25pp, now perfect). Three of four models gained on top-1; all four gained on top-3.
 
 ## Goals And Non-Goals
 

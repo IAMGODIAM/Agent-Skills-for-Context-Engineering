@@ -213,6 +213,32 @@ Integrates with context engineering skills: project-development, context-compres
 
 The [researcher](researcher/) directory is a file-based operating system for turning external research into skill changes. It exists so this repository can act as a compounding source of truth instead of an anthology.
 
+### Measured router-benchmark results
+
+The skill router (which decides whether the right skill gets loaded for a given task) has been benchmarked end-to-end against four frontier models via the [Cursor SDK](https://cursor.com/docs/sdk/typescript). Two full sweeps (50 prompts x 4 models x 3 replications = 600 calls each):
+
+- Baseline: [`researcher/benchmarks/router/results-published/2026-05-15.md`](researcher/benchmarks/router/results-published/2026-05-15.md)
+- After targeted description rewrites: [`researcher/benchmarks/router/results-published/2026-05-15-v2.md`](researcher/benchmarks/router/results-published/2026-05-15-v2.md) (includes delta-vs-baseline)
+
+Per-skill effect size for the three skills the data flagged:
+
+| Skill | Baseline top-1 | After rewrite | Delta |
+| --- | --- | --- | --- |
+| `context-fundamentals` | 0.255 | 0.489 | +23.4pp |
+| `project-development` | 0.750 | 1.000 | +25pp (now perfect) |
+| `tool-design` | 0.729 | 0.807 | +7.8pp |
+
+Per-model top-1 accuracy after the rewrites:
+
+| Model | Top-1 | Top-3 |
+| --- | --- | --- |
+| composer-2 | 0.913 | 0.973 |
+| gpt-5.5 | 0.913 | 0.953 |
+| gemini-3.1-pro | 0.925 | 0.932 |
+| claude-opus-4-7 | 0.867 | 0.953 |
+
+Reproduce any of these numbers exactly via the runner under `researcher/benchmarks/sdk-runner/`.
+
 ### What it includes
 
 - **Source registry** (`researcher/source-registry.md`): priority sources, exclusion rules, monitoring queries.

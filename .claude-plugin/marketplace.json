@@ -5,8 +5,8 @@
     "email": "muratcan.koylan@outlook.com"
   },
   "metadata": {
-    "description": "Context engineering and harness engineering skills plus a file-based autonomous research-to-skill operating system for production-grade AI agent systems",
-    "version": "2.2.0"
+    "description": "Context engineering and harness engineering skills plus a file-based autonomous research-to-skill operating system with measured router-benchmark results across four frontier models",
+    "version": "2.3.0"
   },
   "plugins": [
     {

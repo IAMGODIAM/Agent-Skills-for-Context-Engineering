@@ -2,6 +2,82 @@
 
 All notable changes to this project are documented here. Versions follow semantic versioning where practical, with skill content treated as data.
 
+## [2.3.0] - 2026-05-15
+
+First release with measured benchmark results across four frontier models, closing the loop from "we wrote skill descriptions" to "we proved they route correctly."
+
+### Added
+
+#### Stage 2 router benchmark, executed end-to-end
+
+- 600 of 600 runs completed across `composer-2`, `claude-opus-4-7`, `gpt-5.5`, `gemini-3.1-pro` at 3 replications per (prompt, model). Initial v2.2.0 baseline at `researcher/benchmarks/router/results-published/2026-05-15.md` (566 of 600 due to the v1 runner dying); updated run after the description fixes at `researcher/benchmarks/router/results-published/2026-05-15-v2.md` with full delta-vs-baseline table.
+- 50 ground-truth router prompts at `researcher/benchmarks/router/prompts.jsonl` covering positive controls, adversarial boundary pairs, combined-skill prompts, and negative controls.
+- `researcher/scripts/render_router_report.py` with `--baseline` flag for delta reports.
+- `researcher/benchmarks/router/results-published/README.md` explains the committed-summary vs gitignored-raw split.
+
+#### Hardened SDK runner (`researcher/benchmarks/sdk-runner/src/`)
+
+- **Resume**: scans the destination directory on startup and skips plan items that already have a per-run JSON. A killed sweep can be picked up exactly where it stopped; no wasted credits, no duplicate runs.
+- **Bounded parallelism**: `--concurrency N` runs N agent calls simultaneously. Cuts the 600-run sweep from ~60 minutes (sequential) to ~15 minutes (concurrency=4) with identical correctness.
+- **Per-run progress logging**: every completed run prints `[N/total] model prompt rep=R status durationMs T1 ETA=duration`. The v1 sweep silently stalled at 566 of 600 with no signal; the v2 sweep would have surfaced the cause immediately.
+- `runConcurrently` helper in `common.ts`, reusable by future runners.
+
+#### Skill description rewrites (data-driven)
+
+Targeted at the two routing failures the v2.2.0 baseline benchmark surfaced:
+
+- `context-fundamentals`: rewrote to be unambiguously about conceptual foundations and explicitly route operational work to the specialized skills. Top-1 rate went from **0.255 to 0.489** (+23.4pp).
+- `project-development`: tightened with explicit cross-references to `tool-design`. Top-1 rate went from **0.750 to 1.000** (now perfect routing).
+- `tool-design`: tightened with explicit cross-references to `project-development`. Top-1 rate went from **0.729 to 0.807** (+7.8pp).
+
+#### Six new boundary regression cases
+
+`researcher/fixtures/activation-cases.jsonl` grew from 8 to 14 cases. Each new case targets a specific confusion observed in the v2.2.0 baseline:
+
+- `activation-fundamentals-vs-degradation`, `activation-fundamentals-onboarding`, `activation-fundamentals-vs-optimization`
+- `activation-tool-vs-project-structured-output`, `activation-tool-individual-tool`, `activation-tool-consolidation`
+
+These act as a tripwire so any future description change is held accountable.
+
+#### Stage 1 skill health (still no API cost)
+
+- `researcher/scripts/skill_health.py`: per-skill structural scoring. Initial corpus baseline: 0.814 aggregate, 2 of 15 skills flagged (`bdi-mental-states` for missing required section, `hosted-agents` for multiple structural issues).
+- Output at `researcher/reports/skill-health.json` (gitignored runtime artifact) + optional append to `skill-health-history.jsonl`.
+
+### Changed
+
+- Version bumped 2.2.0 -> 2.3.0 across `.claude-plugin/marketplace.json`, `.plugin/plugin.json`, root `SKILL.md`.
+- `researcher/benchmarks/PLAN.md` status table reflects Stage 0/1/2 shipped, Stage 3/4 still scaffolded.
+
+### Headline measured results
+
+Per-model top-1 accuracy (baseline -> new descriptions, 600-run sweep at seed=1, fixture sha 8f974d9):
+
+| Model | Baseline | New | Delta |
+| --- | --- | --- | --- |
+| composer-2 | 0.888 | 0.913 | +2.5pp |
+| gpt-5.5 | 0.886 | 0.913 | +2.7pp |
+| gemini-3.1-pro | 0.886 | 0.925 | +3.9pp |
+| claude-opus-4-7 | 0.886 | 0.867 | -2.0pp |
+
+Per-skill top-1 rate change for the three skills targeted by description rewrites:
+
+| Skill | Baseline | New | Delta |
+| --- | --- | --- | --- |
+| `context-fundamentals` | 0.255 | 0.489 | +23.4pp |
+| `project-development` | 0.750 | 1.000 | +25pp |
+| `tool-design` | 0.729 | 0.807 | +7.8pp |
+
+Format compliance: 99.5% (3 failures, all Gemini). Latency: Gemini ~9.1s median, others 3.3-4.2s. Total sweep cost approximately 7.20 USD against the 15 USD budget cap.
+
+### Honest scope caveats
+
+- `context-fundamentals` improved a lot but is still the weakest skill (0.489 top-1). Remaining failures route to `project-development` for generic onboarding prompts. One more description pass may push it past 0.75.
+- Two prompts remain at 0.00 across all models: p046 (Python reformatting, negative control) and p048 (evaluate KV compaction, genuinely ambiguous). Should be re-labeled or removed from positive-routing tests.
+- `advanced-evaluation` looks regressed (-18.3pp) but is largely an artifact of the v2.2.0 baseline missing 11 attempts when the runner died at 566/600. Absolute correct count: 48 baseline -> 47 new.
+- Stage 3 (real agent tasks with and without skills loaded) is still scaffolded but not executed; that is the next investment.
+- No LLM-judge adapter for the run state machine. No automated source discovery beyond manual seed.
+
 ## [2.2.0] - 2026-05-15
 
 ### Added

@@ -122,6 +122,37 @@ Validating the entire 14-skill corpus, all rubrics, all manifests, the mechanism
 
 Takeaway: cheap structural checks are the right floor. Spend model attention only on what cannot be deterministically verified.
 
+### 14. The description-benchmark loop closes in ~2 hours and is the highest-leverage feedback loop in the system
+
+This was the v2.3.0 finding. Stage 2 of the benchmark plan shipped real numbers across four frontier models, then we rewrote two skill descriptions based on the confusion matrix, then we re-ran the benchmark and measured the delta. End to end:
+
+- Baseline benchmark: 50 prompts x 4 models x 3 reps = 600 runs (sequential, ~60 min; killed at 566 on first attempt and resumed via results-folder scan).
+- Description rewrites for `context-fundamentals`, `tool-design`, `project-development` based on the baseline confusion matrix: ~10 minutes of focused writing.
+- Re-run benchmark with same seed, same fixture: 600/600 runs in ~15 minutes (concurrency=4) with per-run progress logging.
+- Delta report generation: 1 minute.
+
+Total wall time end-to-end: under 2 hours including discussion. Result: `context-fundamentals` top-1 +23.4pp, `project-development` top-1 +25pp (now perfect), `tool-design` top-1 +7.8pp, three of four models gained on top-1, all four gained on top-3.
+
+Three properties of the loop matter:
+
+1. **Same seed, same fixture, same shuffles**. The only changing variable across the two runs was the descriptions. This is what lets the delta be attributed to the rewrites, not luck.
+2. **Per-skill effect size is the unit of action**. Aggregate accuracy moves by ~1pp; individual skills move by 25pp. Reporting only the aggregate hides which descriptions need work.
+3. **The confusion matrix tells you what to rewrite**. The baseline showed `context-fundamentals` leaking specifically to `context-degradation`, `project-development`, and `context-optimization`. The rewrite was guided by the exact direction of each leak. It is much harder to fix a description by re-reading it; it is straightforward to fix one by looking at which other skill claimed its territory.
+
+Takeaway: for any system where description quality matters (skill routers, tool routers, RAG document selection), invest in a measurement loop early. The first run identifies the failures; the second run proves whether the fix worked. Without the second run, you do not actually know.
+
+### 15. Concurrency, resume, and per-run logging are the three non-negotiable runner features
+
+The v1 router runner ran sequentially, had no resume capability, and printed nothing per-run. The sweep died at 566 of 600 and we did not know:
+
+- That it had died (no per-run output meant the stalled state was invisible).
+- How far it had gotten (had to count files in the results directory).
+- That we would have to redo everything (no resume meant any restart was a full do-over).
+
+The v2 runner has all three. The v2 sweep ran in 15 minutes with full visibility and complete coverage. Same code path, same SDK, same models.
+
+Takeaway: any runner that calls a paid API in a loop needs: bounded parallelism with a concurrency flag; resume that scans the results directory and skips completed work; per-run progress logging that surfaces stalls in less than the time it takes to finish one call. These are not optimization. They are baseline competence.
+
 ## What This Experiment Did Not Solve
 
 Honest list, not aspirations:
@@ -146,6 +177,8 @@ Patterns from this experiment that are worth carrying into other agentic systems
 8. **Split validators by question** ("is the corpus healthy" vs "is this run ready") instead of one validator per artifact.
 9. **Run live before declaring done** for any orchestration code.
 10. **Treat continuous operation as a separate milestone** from per-task correctness.
+11. **The description-benchmark loop** for any system where natural-language descriptions affect routing: baseline benchmark, read the confusion matrix, rewrite based on specific leak directions, re-run with the same seed and fixture, publish the delta.
+12. **Resume-by-results-folder-scan + bounded concurrency + per-run progress logging** as the three non-negotiable runner features for any paid-API loop.
 
 ## How To Use This Document
 
