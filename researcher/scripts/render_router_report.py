@@ -256,11 +256,89 @@ def render(summary: dict[str, dict[str, Any]], confusion: dict[str, dict[str, in
     return "\n".join(lines) + "\n"
 
 
+def delta_section(
+    new_summary: dict[str, dict[str, Any]],
+    new_confusion: dict[str, dict[str, int]],
+    new_per_prompt: list[dict[str, Any]],
+    baseline_summary: dict[str, dict[str, Any]],
+    baseline_confusion: dict[str, dict[str, int]],
+    baseline_per_prompt: list[dict[str, Any]],
+    baseline_label: str,
+) -> list[str]:
+    lines: list[str] = []
+    lines.append("## Delta vs baseline")
+    lines.append("")
+    lines.append(f"_baseline: {baseline_label}_")
+    lines.append("")
+    lines.append("### Per-model accuracy change")
+    lines.append("")
+    lines.append("| Model | Baseline Top-1 | New Top-1 | Delta | Baseline Top-3 | New Top-3 | Delta |")
+    lines.append("| --- | --- | --- | --- | --- | --- | --- |")
+    models = sorted(set(new_summary) | set(baseline_summary))
+    for model in models:
+        bt1 = baseline_summary.get(model, {}).get("top1_accuracy")
+        nt1 = new_summary.get(model, {}).get("top1_accuracy")
+        bt3 = baseline_summary.get(model, {}).get("top3_accuracy")
+        nt3 = new_summary.get(model, {}).get("top3_accuracy")
+        d1 = (nt1 - bt1) if isinstance(bt1, (int, float)) and isinstance(nt1, (int, float)) else None
+        d3 = (nt3 - bt3) if isinstance(bt3, (int, float)) and isinstance(nt3, (int, float)) else None
+        bt1_s = f"{bt1:.3f}" if isinstance(bt1, (int, float)) else "-"
+        nt1_s = f"{nt1:.3f}" if isinstance(nt1, (int, float)) else "-"
+        bt3_s = f"{bt3:.3f}" if isinstance(bt3, (int, float)) else "-"
+        nt3_s = f"{nt3:.3f}" if isinstance(nt3, (int, float)) else "-"
+        d1_s = f"{'+' if d1 and d1 > 0 else ''}{d1:.3f}" if d1 is not None else "-"
+        d3_s = f"{'+' if d3 and d3 > 0 else ''}{d3:.3f}" if d3 is not None else "-"
+        lines.append(f"| `{model}` | {bt1_s} | {nt1_s} | {d1_s} | {bt3_s} | {nt3_s} | {d3_s} |")
+    lines.append("")
+    lines.append("### Per-skill top-1 rate change")
+    lines.append("")
+    lines.append("Counts a row as correct when the predicted primary equals the expected primary.")
+    lines.append("")
+    lines.append("| Skill (expected) | Baseline | New | Delta |")
+    lines.append("| --- | --- | --- | --- |")
+    all_skills = sorted(set(baseline_confusion) | set(new_confusion))
+    for skill in all_skills:
+        b_row = baseline_confusion.get(skill, {})
+        n_row = new_confusion.get(skill, {})
+        b_total = sum(b_row.values())
+        n_total = sum(n_row.values())
+        b_correct = b_row.get(skill, 0)
+        n_correct = n_row.get(skill, 0)
+        b_rate = b_correct / b_total if b_total else 0.0
+        n_rate = n_correct / n_total if n_total else 0.0
+        delta = n_rate - b_rate
+        delta_s = f"{'+' if delta > 0 else ''}{delta:.3f}"
+        marker = " <- improved" if delta >= 0.05 else (" <- regressed" if delta <= -0.05 else "")
+        lines.append(
+            f"| `{skill}` | {b_correct}/{b_total} = {b_rate:.3f} | {n_correct}/{n_total} = {n_rate:.3f} | {delta_s}{marker} |"
+        )
+    lines.append("")
+    lines.append("### Previously-hardest prompts")
+    lines.append("")
+    baseline_hardest_ids = {row["prompt_id"] for row in sorted(baseline_per_prompt, key=lambda r: r["top1_rate"])[:10]}
+    lines.append("| Prompt | Expected | Baseline Top-1 Rate | New Top-1 Rate | Delta |")
+    lines.append("| --- | --- | --- | --- | --- |")
+    new_by_id = {row["prompt_id"]: row for row in new_per_prompt}
+    baseline_by_id = {row["prompt_id"]: row for row in baseline_per_prompt}
+    for prompt_id in sorted(baseline_hardest_ids):
+        baseline = baseline_by_id.get(prompt_id, {})
+        new = new_by_id.get(prompt_id, {})
+        b_rate = baseline.get("top1_rate", 0.0)
+        n_rate = new.get("top1_rate", 0.0)
+        delta = n_rate - b_rate
+        delta_s = f"{'+' if delta > 0 else ''}{delta:.3f}"
+        expected = baseline.get("expected") or new.get("expected") or "-"
+        lines.append(f"| {prompt_id} | `{expected}` | {b_rate:.2f} | {n_rate:.2f} | {delta_s} |")
+    return lines
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Render router benchmark report")
     parser.add_argument("--results", type=Path, required=True, help="Directory of per-run JSON files")
     parser.add_argument("--fixture", type=Path, required=True, help="Router prompts JSONL")
     parser.add_argument("--output", type=Path, required=True, help="Destination Markdown file")
+    parser.add_argument("--baseline", type=Path, help="Optional baseline results directory to compute deltas against")
+    parser.add_argument("--baseline-label", type=str, help="Human label for the baseline (e.g. '2026-05-15 v2.2.0 descriptions')")
     args = parser.parse_args()
 
     if not args.results.exists():
@@ -297,6 +375,23 @@ def main() -> int:
     per_prompt = per_prompt_breakdown(records, prompts)
 
     rendered = render(summary, confusion, per_prompt, meta)
+
+    if args.baseline and args.baseline.exists():
+        baseline_records = load_run_records(args.baseline)
+        baseline_summary = summarize_per_model(baseline_records)
+        baseline_confusion = build_confusion(baseline_records, prompts)
+        baseline_per_prompt = per_prompt_breakdown(baseline_records, prompts)
+        delta = delta_section(
+            summary,
+            confusion,
+            per_prompt,
+            baseline_summary,
+            baseline_confusion,
+            baseline_per_prompt,
+            args.baseline_label or str(args.baseline),
+        )
+        rendered = rendered.rstrip("\n") + "\n\n" + "\n".join(delta) + "\n"
+
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(rendered, encoding="utf-8")
     print(f"wrote {args.output}")
