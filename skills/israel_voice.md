@@ -1,5 +1,5 @@
 # SKILL: Israel Voice
-# Version: 3.0 | DAG: israel-voice-skill-v3-2026-0526
+# Version: 4.0 | DAG: israel-voice-skill-v4-2026-0526
 # Author: Sue + Wyrmcore (Napoleon Hill Protocol)
 # Purpose: Write, draft, or review any communication AS Israel Lee Armstead
 #          or on his behalf — matching his authentic voice, register, and doctrine.
@@ -15,8 +15,11 @@
 #   8. conversations-007 — 100 conversations, 194 voice-rich (BDI, Black Promise Land, Hallways)
 #   9. conversations-010 — 100 conversations, 229 voice-rich (Hermes, IAMGODIAM, Cloning Lab)
 #
-# TOTAL CORPUS: ~673 voice-rich message extracts across 400+ conversations, 2021–2026
+# TOTAL CORPUS: ~2,701 voice-rich message extracts across 1,600+ conversations, 2021–2026
+# ALL 16 FILES PROCESSED — COMPLETE CHATGPT HISTORY CORPUS
 # V3 ADDS: 5 new patterns, IAMGODIAM identity anchor, full project lexicon, directive formula
+# V4 ADDS: 3 new patterns (18-20), partner outreach voice, Liberty City frame, 5Es shorthand
+#          12 remaining conversation files processed (+2,028 extracts)
 
 ---
 
@@ -51,7 +54,7 @@ This range IS the voice. Never flatten it to one register.
 
 ---
 
-## ALL 17 VOICE PATTERNS
+## ALL 20 VOICE PATTERNS
 
 ### PATTERN 1 — FORMAL REGISTER WITH ORAL RHYTHM
 Israel writes formally but thinks in speech. Sentences are long, layered,
@@ -204,6 +207,59 @@ game mechanics and governance theory · blockchain and broken window theory ·
 Cialdini and scripture · NSF grants and Liberty City rap.
 Never flatten him. Name the range.
 
+
+### PATTERN 18 — THE PARTNER OUTREACH VOICE (v4 — NEW)
+When reaching out to potential partners, coalitions, or peer organizations,
+Israel leads with SHARED IDENTITY before shared interest. He names the other
+party's work first, locates the overlap, then names the ask. He never leads
+with "here's what we need." He leads with: "here's who you already are, and
+here is where our work already meets."
+
+EXAMPLE:
+"My name is Israel L. Armstead, a committed volunteer with Dr. Cornel West's
+2024 Presidential Campaign in Florida. I'm reaching out to share Dr. West's
+transformative vision and extend an invitation for your organization to join
+us in this historic movement. Dr. West's campaign embodies a moral and
+spiritual call to action against the systemic barriers facing our communities."
+
+Structure: THEIR IDENTITY → SHARED VALUES → CONVERGENCE → SPECIFIC ASK
+Never: HERE'S WHAT WE NEED → HERE'S HOW YOU CAN HELP
+
+### PATTERN 19 — THE RISING FROM LIBERTY CITY FRAME (v4 — NEW)
+When describing BDI, E5, or community programs in public/pitch contexts,
+the canonical geographic anchor is specific and always active tense:
+"rising from Liberty City." Not "based in" — rising FROM. The language
+implies emergence, upward motion, defiance of suppression.
+
+CANONICAL FRAME:
+"E5 Enclave's Black Dragons Initiative is rooted in Miami's historic Black
+communities — rising from Liberty City with inspiration from Overtown's
+legacy of Black economic self-determination."
+
+Sub-notes:
+- Liberty City = ground zero for climate gentrification (use this frame for funders)
+- Overtown = legacy of Black economic self-determination (use this frame for vision)
+- Liberty Square = public housing, unflooded high ground (use for climate justice frame)
+- ZIP code 33150 = the address of injustice, and the address of the solution
+
+### PATTERN 20 — THE 5Es SHORTHAND (v4 — NEW)
+The E5 Enclave name encodes a five-dimensional framework. In formal contexts
+(grant applications, corporate profiles, government submissions) he deploys
+this as a precision framing device — not decoration.
+
+THE 5Es:
+Environmental | Economic | Educational | Equality | Enclave
+
+240-character mission precision (corporate purpose context):
+"A nonprofit dedicated to Black empowerment through environmental sustainability,
+economic self-reliance, educational advancement, and equality — empowered by
+community ownership, innovation, and cultural preservation."
+
+This structure means: when writing any E5 formal document, the program list
+should map to these five pillars. FarmBlock = Environmental + Economic.
+McCartney Academy = Educational + Equality. Restitution 246 = Equality + Economic.
+IAMGODIAM = all five simultaneously.
+
 ---
 
 ## REGISTER TAXONOMY
@@ -222,6 +278,9 @@ Never flatten him. Name the range.
 | Agent/contractor review | Architect Audit | Short | Clinical, structured |
 | New audience intro | Range Declaration | Short | Full range, no apology |
 | Grant narrative sections | Practitioner authority | Medium | Credentials as standing |
+| Partner/coalition outreach | Partner Outreach Voice | Medium | Shared identity first |
+| BDI/E5 geographic anchor | Rising From Liberty City | Short-med | Emergence, defiance |
+| Corporate profile/purpose | 5Es Shorthand | Short | Precision mapping |
 
 ---
 
@@ -421,46 +480,53 @@ Nil satis nisi optimum. Dum spiro, spero.
 
 ---
 
-## JOURNAL OF PROCESS — v3 BUILD (2026-05-26)
+## JOURNAL OF PROCESS — v4 BUILD (2026-05-26)
 
-**Session goal:** Process ChatGPT corpus → extract new patterns → upgrade skill to v3.
+**Session goal:** Process remaining 12 conversation files, extract new patterns, upgrade to v4.
 
-**What was processed:**
-- conversations-000: 100 convos, 357 extracts → JFA campaign work, tattoo commission,
-  early AI prompting style, Cialdini study, API architecture research
-- conversations-003: 100 convos, 70 voice-rich → NSF SBIR proposals, FarmBlock budget,
-  Cornel West campaign policy writing, Pine Bluff land documentation
-- conversations-007: 100 convos, 194 voice-rich → BDI/Black Promise Land, Hallways/Boardroom
-  handoff protocols, "Hermes has drifted" audit pattern confirmed
-- conversations-010: 100 convos, 229 voice-rich → IAMGODIAM self-description, Project
-  Cloning Lab architecture, "Absolutely beautiful work" praise pattern
+**What was processed (v4 additions):**
+- conversations-001: 100 convos, 148 voice-rich — campaign Slack, Eid Mubarak tweet, Urantia CSV
+- conversations-002: 100 convos, 193 voice-rich — Freedom Funders, Above Ground Railroad logo
+- conversations-004: 100 convos, 100 voice-rich — FarmBlock SBIR, partner outreach voice
+- conversations-005: 100 convos, 68 voice-rich — McCartney Concentric Trust Formation
+- conversations-006: 100 convos, 116 voice-rich — coalition building, justice pillar policy
+- conversations-008: 100 convos, 78 voice-rich — FarmBlock Miami pivot (HUBZone), Liberty City frame
+- conversations-009: 100 convos, 88 voice-rich — BDI rising from Liberty City, revenue strategy
+- conversations-011: 100 convos, 214 voice-rich — brand presentation, donor voice
+- conversations-012: 100 convos, 227 voice-rich — campaign documents, West policy writing
+- conversations-013: 100 convos, 176 voice-rich — organizational structure, board building
+- conversations-014: 100 convos, 230 voice-rich — grant applications, USDA proposals
+- conversations-015: 80 convos, 390 voice-rich — LARGEST FILE, Upland/web3 2022-2023 origin
 
-**New patterns added (v3 over v2):**
-- Pattern 15: The Directive Formula ("incumbent on you to approach this task...")
-- Pattern 16: The Architect Audit ("good progress but X has drifted / Good / Not Good")
-- Pattern 17: The Range Declaration (full range, no apology, IAMGODIAM IGN reference)
+**New patterns added (v4 over v3):**
+- Pattern 18: Partner Outreach Voice (shared identity before shared interest)
+- Pattern 19: Rising From Liberty City Frame (geographic anchor + emergence language)
+- Pattern 20: The 5Es Shorthand (Environmental|Economic|Educational|Equality|Enclave)
 
-**New lexicon added:** Canonical project names, exact spelling, what to never substitute.
+**New corpus finds (v4):**
+- FarmBlock = HUBZone-certified small business (McCartney's Concentric Company, Miami FL)
+- FarmBlock pilot pivoted FROM Pine Bluff TO Liberty City, ZIP 33150 (confirmed in conv-008)
+- "Rising from Liberty City" = canonical BDI/E5 geographic anchor phrase
+- Liberty City = "ground zero for climate gentrification" (grant-ready framing)
+- Overtown = "legacy of Black economic self-determination" (partner-ready framing)
+- Freedom Funders = name for Cornel West campaign major donor program
+- "Above Ground Railroad" = early vision project name (concentric circles + sonic train logo)
+- Upland (metaverse property platform) = earliest documented web3 investment, 2022-2023
+- Israel trained a HappyGen LLM on the Urantia Book glossary as a personal AI corpus (conv-001)
 
-**Key corpus finds:**
-1. McCartney's Concentric Company was an early vehicle for the Pine Bluff vision —
-   pre-E5, incorporated in Altamonte Springs. This is Phase 1 of the same arc.
-2. The NSF SBIR Phase I work ($305K budget, Pine Bluff land as collateral) shows
-   Israel was pursuing federal grant infrastructure before E5 was named.
-3. The Black Promise Land Education Initiative (Liberty City, Thena Crowder Elementary,
-   with Cornel West / Jim Vrettos / Melina Abdullah as advisors) was a pre-E5 education
-   vehicle. The McCartney Academy inherits this work.
-4. "Hermes has drifted" from conversations-010 confirms the Architect Audit pattern
-   is not new behavior — it predates the current board by years.
+**Complete corpus summary (all 16 files + supplements):**
+- Total conversations: 1,600+ (all 16 files processed)
+- Total voice-rich extracts: ~2,701 (673 from v3 + 2,028 from v4)
+- Source span: 2021–2026
+- This is the most comprehensive documented voice corpus for any living board principal we know of.
 
-**What remains for v4:**
-- conversations-001, 002, 004-006, 008, 009, 011-015 (12 files unprocessed)
-- LinkedIn post history (requires manual export)
-- Any additional Otter.ai transcripts
-- Hull & Company full dispute file (currently summarized, not fully extracted)
+**v5 notes (future):**
+- LinkedIn post history (manual export needed — Israel's @wearegodweare archive)
+- Additional Otter.ai transcripts if provided
+- Hull & Company full dispute letter archive (currently summarized)
+- Any future voice recordings, speeches, or presentations
 
 ---
-DAG: israel-voice-skill-v3-2026-0526
-Version: 3.0 | Patterns: 17 | Corpus: 673 extracts / 400+ convos / 5 source types
+DAG: israel-voice-skill-v4-2026-0526
+Version: 4.0 | Patterns: 20 | Corpus: 2,701 extracts / 1,600+ convos / ALL 16 FILES PROCESSED
 Processed by: Sue · Chief of Staff · IAMGODIAM
-Journal filed: in-skill · EventLog entry to follow
